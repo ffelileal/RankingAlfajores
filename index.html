@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Registro de Alfajores 2024</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .elegant-title {
+            font-family: 'Playfair Display', serif;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #1a0f0a 0%, #2d1810 20%, #4a2c1a 40%, #6b3e2a 60%, #8b5a3c 80%, #a67c52 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .gradient-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(255, 215, 0, 0.1) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(255, 140, 0, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+        
+        .luxury-card {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 
+                0 32px 64px rgba(0, 0, 0, 0.08),
+                0 16px 32px rgba(139, 69, 19, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .luxury-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+        }
+        
+        .card-hover {
+            transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 
+                0 48px 96px rgba(0, 0, 0, 0.12),
+                0 24px 48px rgba(139, 69, 19, 0.1),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+        
+        .glass-effect {
+            backdrop-filter: blur(40px);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.8) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 24px 48px rgba(0, 0, 0, 0.06),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
+        }
+        
+        .elegant-input {
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            border: 2px solid transparent;
+            background: linear-gradient(white, white) padding-box, 
+                       linear-gradient(135deg, #d4af37, #ffd700, #ffed4e) border-box;
+            font-weight: 500;
+            letter-spacing: 0.01em;
+        }
+        
+        .elegant-input:focus {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 16px 32px rgba(212, 175, 55, 0.15),
+                0 8px 16px rgba(255, 215, 0, 0.1);
+            background: linear-gradient(white, white) padding-box, 
+                       linear-gradient(135deg, #b8860b, #daa520, #ffd700) border-box;
+        }
+        
+        .btn-luxury {
+            background: linear-gradient(135deg, #1a0f0a 0%, #2d1810 25%, #4a2c1a 50%, #6b3e2a 75%, #8b5a3c 100%);
+            background-size: 300% 300%;
+            animation: luxuryGradient 4s ease infinite;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+        
+        .btn-luxury::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.6s;
+        }
+        
+        .btn-luxury:hover::before {
+            left: 100%;
+        }
+        
+        .btn-luxury:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 20px 40px rgba(26, 15, 10, 0.3),
+                0 10px 20px rgba(139, 69, 19, 0.2);
+        }
+        
+        @keyframes luxuryGradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        
+        .floating-nav {
+            backdrop-filter: blur(40px);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.9) 100%);
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.04);
+        }
+        
+        .modal-overlay {
+            backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.6);
+        }
+        
+        .premium-gradient {
+            background: linear-gradient(135deg, #d4af37 0%, #ffd700 25%, #ffed4e 50%, #daa520 75%, #b8860b 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .luxury-badge {
+            background: linear-gradient(135deg, #d4af37, #ffd700);
+            box-shadow: 
+                0 8px 16px rgba(212, 175, 55, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
+        }
+        
+        .elegant-section {
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.02) 0%, rgba(255, 255, 255, 0.05) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .luxury-text {
+            color: #2d1810;
+            font-weight: 500;
+            line-height: 1.6;
+        }
+        
+        .accent-gold {
+            color: #d4af37;
+        }
+        
+        .hover-lift {
+            transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        
+        .hover-lift:hover {
+            transform: translateY(-2px);
+        }
+        
+        .elegant-divider {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.3), transparent);
+        }
+        
+        .luxury-rating {
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            color: #1a0f0a;
+            font-weight: 700;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-orange-50 min-h-screen">
+    <!-- Header -->
+    <header class="gradient-bg text-white py-12 shadow-2xl relative">
+        <div class="container mx-auto px-4 relative z-10">
+            <h1 class="elegant-title text-6xl text-center mb-4 text-white">
+                
+                Mi Registro de Alfajores
+                
+            </h1>
+            <p class="text-center text-xl text-amber-100 font-light tracking-wide">Descubriendo los mejores alfajores con elegancia y distinción</p>
+            <div class="elegant-divider w-32 mx-auto mt-6"></div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="floating-nav sticky top-0 z-40">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap justify-center space-x-4 py-8">
+                <button onclick="showSection('form')" class="nav-btn btn-luxury text-white px-8 py-4 rounded-2xl shadow-xl hover-lift">
+                    <span class="mr-2">➕</span>Agregar Alfajor
+                </button>
+                <button onclick="showSection('gallery')" class="nav-btn btn-luxury text-white px-8 py-4 rounded-2xl shadow-xl hover-lift">
+                    <span class="mr-2">🖼️</span>Galería
+                </button>
+                <button onclick="showSection('stats')" class="nav-btn btn-luxury text-white px-8 py-4 rounded-2xl shadow-xl hover-lift">
+                    <span class="mr-2">📊</span>Estadísticas
+                </button>
+                <button onclick="showSection('best')" class="nav-btn btn-luxury text-white px-8 py-4 rounded-2xl shadow-xl hover-lift">
+                    <span class="mr-2">🏆</span>Los Mejores
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mx-auto px-4 py-8">
+        <!-- Formulario -->
+        <section id="form-section" class="section">
+            <div class="luxury-card p-12 max-w-4xl mx-auto">
+                <h2 class="elegant-title text-5xl premium-gradient mb-10 text-center">
+                    <span class="inline-block transform hover:rotate-12 transition-transform duration-300">✨</span>
+                    Registrar Nuevo Alfajor
+                    <span class="inline-block transform hover:rotate-12 transition-transform duration-300">✨</span>
+                </h2>
+                <div class="elegant-divider w-24 mx-auto mb-10"></div>
+                <form id="alfajor-form" class="space-y-8">
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block luxury-text font-semibold mb-4 text-xl">Fecha</label>
+                            <input type="date" id="fecha" required class="elegant-input w-full p-5 rounded-2xl focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block luxury-text font-semibold mb-4 text-xl">Momento del día</label>
+                            <select id="momento" required class="elegant-input w-full p-5 rounded-2xl focus:outline-none">
+                                <option value="">Seleccionar momento...</option>
+                                <option value="Desayuno">Desayuno</option>
+                                <option value="Media mañana">Media mañana</option>
+                                <option value="Almuerzo">Almuerzo</option>
+                                <option value="Merienda">Merienda</option>
+                                <option value="Cena">Cena</option>
+                                <option value="Noche">Noche</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block luxury-text font-semibold mb-4 text-xl">Nombre del alfajor</label>
+                            <input type="text" id="nombre" required class="elegant-input w-full p-5 rounded-2xl focus:outline-none" placeholder="Ej: Havanna, Cachafaz...">
+                        </div>
+                        <div>
+                            <label class="block luxury-text font-semibold mb-4 text-xl">Tipo de alfajor</label>
+                            <select id="tipo" required class="elegant-input w-full p-5 rounded-2xl focus:outline-none">
+                                <option value="">Seleccionar tipo...</option>
+                                <option value="Negro">Negro</option>
+                                <option value="Maicena">Maicena</option>
+                                <option value="Chocolate">Chocolate</option>
+                                <option value="Blanco">Blanco</option>
+                                <option value="Coco">Coco</option>
+                                <option value="Otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block luxury-text font-semibold mb-4 text-xl">Relleno</label>
+                            <input type="text" id="relleno" required placeholder="Ej: dulce de leche, chocolate, fruta" class="elegant-input w-full p-5 rounded-2xl focus:outline-none">
+                        </div>
+                        <div>
+                            <label class="block luxury-text font-semibold mb-4 text-xl">Tamaño</label>
+                            <select id="tamaño" required class="elegant-input w-full p-5 rounded-2xl focus:outline-none">
+                                <option value="">Seleccionar tamaño...</option>
+                                <option value="Simple">Simple</option>
+                                <option value="Doble">Doble</option>
+                                <option value="Triple">Triple</option>
+                                <option value="XL">XL</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="grid md:grid-cols-2 gap-8">
+                        <div>
+                            <label class="block luxury-text font-semibold mb-4 text-xl">Precio ($)</label>
+                            <input type="number" id="precio" step="0.01" min="0" required class="elegant-input w-full p-5 rounded-2xl focus:outline-none" placeholder="0.00">
+                        </div>
+                        <div>
+                            <label class="block luxury-text font-semibold mb-4 text-xl">Puntuación (0-10)</label>
+                            <div class="flex items-center space-x-6">
+                                <input type="range" id="puntuacion" min="0" max="10" step="0.5" value="5" class="flex-1 h-4 bg-gradient-to-r from-red-400 via-yellow-400 to-green-400 rounded-full appearance-none cursor-pointer">
+                                <span id="puntuacion-display" class="luxury-rating text-2xl font-bold w-20 text-center rounded-2xl py-3 px-2">5.0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block luxury-text font-semibold mb-4 text-xl">Sabor (descripción corta)</label>
+                        <input type="text" id="sabor" required placeholder="Ej: dulce equilibrado, muy chocolatoso, suave..." class="elegant-input w-full p-5 rounded-2xl focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block luxury-text font-semibold mb-4 text-xl">Comentarios</label>
+                        <textarea id="comentarios" rows="5" class="elegant-input w-full p-5 rounded-2xl focus:outline-none resize-none" placeholder="Describe tu experiencia completa con este alfajor..."></textarea>
+                    </div>
+
+                    <div>
+                        <label class="block luxury-text font-semibold mb-4 text-xl">🔄 ¿Volvería a comprar?</label>
+                        <div class="flex space-x-10">
+                            <label class="flex items-center cursor-pointer hover-lift">
+                                <input type="radio" name="volveria" value="Sí" required class="mr-4 w-6 h-6 accent-green-500">
+                                <span class="text-green-600 font-bold text-xl">Sí!</span>
+                            </label>
+                            <label class="flex items-center cursor-pointer hover-lift">
+                                <input type="radio" name="volveria" value="No" required class="mr-4 w-6 h-6 accent-red-500">
+                                <span class="text-red-600 font-bold text-xl">No!</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block luxury-text font-semibold mb-4 text-xl">Foto del alfajor (opcional)</label>
+                        <input type="file" id="foto" accept="image/*" class="elegant-input w-full p-5 rounded-2xl focus:outline-none file:mr-4 file:py-3 file:px-6 file:rounded-2xl file:border-0 file:text-sm file:font-semibold file:bg-amber-50 file:text-amber-800 hover:file:bg-amber-100 file:shadow-lg">
+                    </div>
+
+                    <button type="submit" class="w-full btn-luxury text-white py-6 px-10 rounded-3xl text-xl shadow-2xl hover-lift">
+                        <span class="mr-3"></span>Guardar Alfajor <span class="ml-3"></span>
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- Galería -->
+        <section id="gallery-section" class="section hidden">
+            <div class="luxury-card p-8 mb-10">
+                <h2 class="elegant-title text-4xl premium-gradient mb-8 text-center">
+                    <span class="inline-block transform hover:scale-110 transition-transform duration-300">🖼️</span>
+                    Galería de Alfajores
+                    <span class="inline-block transform hover:scale-110 transition-transform duration-300">🖼️</span>
+                </h2>
+                <div class="elegant-divider w-20 mx-auto mb-8"></div>
+                
+                <!-- Filtros -->
+                <div class="grid md:grid-cols-4 gap-6 mb-8">
+                    <select id="filter-tipo" class="elegant-input p-4 rounded-2xl focus:outline-none">
+                        <option value="">Todos los tipos</option>
+                        <option value="Negro">Negro</option>
+                        <option value="Maicena">Maicena</option>
+                        <option value="Chocolate">Chocolate</option>
+                        <option value="Blanco">Blanco</option>
+                        <option value="Coco">Coco</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                    <select id="filter-momento" class="elegant-input p-4 rounded-2xl focus:outline-none">
+                        <option value="">Todos los momentos</option>
+                        <option value="Desayuno">Desayuno</option>
+                        <option value="Media mañana">Media mañana</option>
+                        <option value="Almuerzo">Almuerzo</option>
+                        <option value="Merienda">Merienda</option>
+                        <option value="Cena">Cena</option>
+                        <option value="Noche">Noche</option>
+                    </select>
+                    <select id="filter-puntuacion" class="elegant-input p-4 rounded-2xl focus:outline-none">
+                        <option value="">Todas las puntuaciones</option>
+                        <option value="9">9+ puntos</option>
+                        <option value="8">8+ puntos</option>
+                        <option value="7">7+ puntos</option>
+                        <option value="6">6+ puntos</option>
+                        <option value="5">5+ puntos</option>
+                    </select>
+                    <select id="filter-orden" class="elegant-input p-4 rounded-2xl focus:outline-none">
+                        <option value="fecha-desc">Más recientes</option>
+                        <option value="fecha-asc">Más antiguos</option>
+                        <option value="puntuacion-desc">Mejor puntuados</option>
+                        <option value="puntuacion-asc">Peor puntuados</option>
+                    </select>
+                </div>
+
+                <!-- Botones de exportación -->
+                <div class="flex flex-wrap gap-6 mb-8 justify-center">
+                    <button onclick="exportToExcel()" class="btn-luxury text-white px-8 py-4 rounded-2xl hover-lift shadow-xl">
+                        <span class="mr-2">📊</span>Exportar Excel
+                    </button>
+                    <button onclick="exportToPDF()" class="btn-luxury text-white px-8 py-4 rounded-2xl hover-lift shadow-xl">
+                        <span class="mr-2">📄</span>Exportar PDF
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grid de alfajores -->
+            <div id="alfajores-grid" class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Las tarjetas se generarán dinámicamente -->
+            </div>
+        </section>
+
+        <!-- Estadísticas -->
+        <section id="stats-section" class="section hidden">
+            <div class="bg-white rounded-xl card-shadow p-8">
+                <h2 class="text-3xl font-bold text-orange-800 mb-8 text-center">Estadísticas del Año</h2>
+                <div id="stats-content" class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Las estadísticas se generarán dinámicamente -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Los Mejores -->
+        <section id="best-section" class="section hidden">
+            <div class="bg-white rounded-xl card-shadow p-8">
+                <h2 class="text-3xl font-bold text-orange-800 mb-8 text-center">TOP  Alfajores</h2>
+                <div id="best-content">
+                    <!-- Los mejores alfajores se generarán dinámicamente -->
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Variables globales
+        let alfajores = JSON.parse(localStorage.getItem('alfajores')) || [];
+        let currentSection = 'form';
+
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            // Establecer fecha actual por defecto
+            document.getElementById('fecha').valueAsDate = new Date();
+            
+            // Configurar slider de puntuación
+            const puntuacionSlider = document.getElementById('puntuacion');
+            const puntuacionDisplay = document.getElementById('puntuacion-display');
+            
+            puntuacionSlider.addEventListener('input', function() {
+                puntuacionDisplay.textContent = parseFloat(this.value).toFixed(1);
+            });
+
+            // Configurar formulario
+            document.getElementById('alfajor-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                agregarAlfajor();
+            });
+
+            // Configurar filtros
+            ['filter-tipo', 'filter-momento', 'filter-puntuacion', 'filter-orden'].forEach(id => {
+                document.getElementById(id).addEventListener('change', aplicarFiltros);
+            });
+
+            // Mostrar sección inicial
+            showSection('form');
+            actualizarGaleria();
+            actualizarEstadisticas();
+            actualizarMejores();
+        });
+
+        // Navegación entre secciones
+        function showSection(section) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section').forEach(s => s.classList.add('hidden'));
+            
+            // Mostrar la sección seleccionada
+            document.getElementById(section + '-section').classList.remove('hidden');
+            
+            // Actualizar botones de navegación
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('ring-2', 'ring-white');
+            });
+            event.target.classList.add('ring-2', 'ring-white');
+            
+            currentSection = section;
+        }
+
+        // Agregar nuevo alfajor
+        function agregarAlfajor() {
+            const formData = new FormData(document.getElementById('alfajor-form'));
+            const fotoFile = document.getElementById('foto').files[0];
+            
+            const alfajor = {
+                id: Date.now(),
+                fecha: document.getElementById('fecha').value,
+                momento: document.getElementById('momento').value,
+                nombre: document.getElementById('nombre').value,
+                tipo: document.getElementById('tipo').value,
+                relleno: document.getElementById('relleno').value,
+                tamaño: document.getElementById('tamaño').value,
+                precio: parseFloat(document.getElementById('precio').value),
+                sabor: document.getElementById('sabor').value,
+                comentarios: document.getElementById('comentarios').value,
+                puntuacion: parseFloat(document.getElementById('puntuacion').value),
+                volveria: document.querySelector('input[name="volveria"]:checked').value,
+                foto: null
+            };
+
+            // Procesar foto si existe
+            if (fotoFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    alfajor.foto = e.target.result;
+                    guardarAlfajor(alfajor);
+                };
+                reader.readAsDataURL(fotoFile);
+            } else {
+                guardarAlfajor(alfajor);
+            }
+        }
+
+        function guardarAlfajor(alfajor) {
+            alfajores.push(alfajor);
+            localStorage.setItem('alfajores', JSON.stringify(alfajores));
+            
+            // Limpiar formulario
+            document.getElementById('alfajor-form').reset();
+            document.getElementById('fecha').valueAsDate = new Date();
+            document.getElementById('puntuacion-display').textContent = '5.0';
+            
+            // Actualizar vistas
+            actualizarGaleria();
+            actualizarEstadisticas();
+            actualizarMejores();
+            
+            // Mostrar mensaje de éxito
+            mostrarMensaje('¡Alfajor guardado exitosamente! 🎉', 'success');
+        }
+
+        // Actualizar galería
+        function actualizarGaleria() {
+            const grid = document.getElementById('alfajores-grid');
+            let alfajoresFiltrados = [...alfajores];
+            
+            // Aplicar filtros
+            alfajoresFiltrados = aplicarFiltrosArray(alfajoresFiltrados);
+            
+            if (alfajoresFiltrados.length === 0) {
+                grid.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-gray-500 text-xl">No hay alfajores que coincidan con los filtros seleccionados</p></div>';
+                return;
+            }
+
+            grid.innerHTML = alfajoresFiltrados.map(alfajor => `
+                <div class="luxury-card card-hover overflow-hidden">
+                    ${alfajor.foto ? `<img src="${alfajor.foto}" alt="${alfajor.nombre}" class="w-full h-64 object-cover">` : `
+                        <div class="w-full h-64 premium-gradient flex items-center justify-center">
+                            <span class="text-9xl opacity-90">🧡</span>
+                        </div>
+                    `}
+                    <div class="p-10">
+                        <div class="flex justify-between items-start mb-6">
+                            <h3 class="elegant-title text-3xl luxury-text">${alfajor.nombre}</h3>
+                            <div class="luxury-badge text-white px-4 py-2 rounded-2xl shadow-lg">
+                                <span class="text-xl font-bold">${alfajor.puntuacion}</span>
+                                <span class="ml-1">⭐</span>
+                            </div>
+                        </div>
+                        
+                        <div class="grid grid-cols-2 gap-4 text-sm mb-6">
+                            <div class="elegant-section p-4 rounded-2xl">
+                                <span class="font-bold accent-gold">🍪 Tipo:</span><br>
+                                <span class="luxury-text font-medium">${alfajor.tipo}</span>
+                            </div>
+                            <div class="elegant-section p-4 rounded-2xl">
+                                <span class="font-bold accent-gold">🍯 Relleno:</span><br>
+                                <span class="luxury-text font-medium">${alfajor.relleno}</span>
+                            </div>
+                            <div class="elegant-section p-4 rounded-2xl">
+                                <span class="font-bold accent-gold">📏 Tamaño:</span><br>
+                                <span class="luxury-text font-medium">${alfajor.tamaño}</span>
+                            </div>
+                            <div class="elegant-section p-4 rounded-2xl">
+                                <span class="font-bold accent-gold">💰 Precio:</span><br>
+                                <span class="luxury-text font-medium">$${alfajor.precio}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-orange-50 to-amber-50 p-4 rounded-xl mb-4">
+                            <p class="text-sm mb-2"><span class="font-bold text-orange-800">👅 Sabor:</span> <span class="text-orange-700">${alfajor.sabor}</span></p>
+                            <p class="text-sm mb-2"><span class="font-bold text-orange-800">🕐 Momento:</span> <span class="text-orange-700">${alfajor.momento}</span></p>
+                            <p class="text-sm"><span class="font-bold text-orange-800">📅 Fecha:</span> <span class="text-orange-700">${new Date(alfajor.fecha).toLocaleDateString('es-ES')}</span></p>
+                        </div>
+                        
+                        ${alfajor.comentarios ? `
+                            <div class="bg-blue-50 p-4 rounded-xl mb-4">
+                                <p class="text-sm"><span class="font-bold text-blue-800">💭 Comentarios:</span></p>
+                                <p class="text-blue-700 mt-1 italic" id="comentarios-${alfajor.id}">${alfajor.comentarios}</p>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="flex justify-between items-center mb-4">
+                            <span class="text-sm ${alfajor.volveria === 'Sí' ? 'text-green-600 bg-green-50' : 'text-red-600 bg-red-50'} font-bold px-3 py-2 rounded-full">
+                                ${alfajor.volveria === 'Sí' ? '✅ ¡Volvería a comprar!' : '❌ No lo volvería a comprar'}
+                            </span>
+                        </div>
+                        
+                        <div class="flex space-x-2">
+                            <button onclick="editarComentarios(${alfajor.id})" class="flex-1 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg font-semibold transition-all transform hover:scale-105">
+                                ✏️ Editar
+                            </button>
+                            <button onclick="eliminarAlfajor(${alfajor.id})" class="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-lg font-semibold transition-all transform hover:scale-105">
+                                🗑️ Eliminar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Aplicar filtros
+        function aplicarFiltros() {
+            actualizarGaleria();
+        }
+
+        function aplicarFiltrosArray(alfajores) {
+            const tipoFiltro = document.getElementById('filter-tipo').value;
+            const momentoFiltro = document.getElementById('filter-momento').value;
+            const puntuacionFiltro = document.getElementById('filter-puntuacion').value;
+            const ordenFiltro = document.getElementById('filter-orden').value;
+
+            let filtrados = alfajores.filter(alfajor => {
+                return (!tipoFiltro || alfajor.tipo === tipoFiltro) &&
+                       (!momentoFiltro || alfajor.momento === momentoFiltro) &&
+                       (!puntuacionFiltro || alfajor.puntuacion >= parseFloat(puntuacionFiltro));
+            });
+
+            // Aplicar ordenamiento
+            switch(ordenFiltro) {
+                case 'fecha-desc':
+                    filtrados.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+                    break;
+                case 'fecha-asc':
+                    filtrados.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
+                    break;
+                case 'puntuacion-desc':
+                    filtrados.sort((a, b) => b.puntuacion - a.puntuacion);
+                    break;
+                case 'puntuacion-asc':
+                    filtrados.sort((a, b) => a.puntuacion - b.puntuacion);
+                    break;
+            }
+
+            return filtrados;
+        }
+
+        // Actualizar estadísticas
+        function actualizarEstadisticas() {
+            const statsContent = document.getElementById('stats-content');
+            
+            if (alfajores.length === 0) {
+                statsContent.innerHTML = '<div class="col-span-full text-center py-12"><p class="text-gray-500 text-xl">No hay alfajores registrados aún</p></div>';
+                return;
+            }
+
+            const total = alfajores.length;
+            const promedioPuntuacion = (alfajores.reduce((sum, a) => sum + a.puntuacion, 0) / total).toFixed(1);
+            const promedioPrecios = (alfajores.reduce((sum, a) => sum + a.precio, 0) / total).toFixed(2);
+            
+            // Tipo más común
+            const tipoCount = {};
+            alfajores.forEach(a => tipoCount[a.tipo] = (tipoCount[a.tipo] || 0) + 1);
+            const tipoMasComun = Object.keys(tipoCount).reduce((a, b) => tipoCount[a] > tipoCount[b] ? a : b);
+            
+            // Momento más común
+            const momentoCount = {};
+            alfajores.forEach(a => momentoCount[a.momento] = (momentoCount[a.momento] || 0) + 1);
+            const momentoMasComun = Object.keys(momentoCount).reduce((a, b) => momentoCount[a] > momentoCount[b] ? a : b);
+            
+            // Porcentaje que volvería a comprar
+            const volveriaComprar = alfajores.filter(a => a.volveria === 'Sí').length;
+            const porcentajeVolveria = ((volveriaComprar / total) * 100).toFixed(1);
+
+            statsContent.innerHTML = `
+                <div class="bg-gradient-to-br from-orange-100 to-amber-100 p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold text-orange-800">${total}</div>
+                    <div class="text-orange-600 font-semibold">Alfajores probados</div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-amber-100 to-yellow-100 p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold text-amber-800">${promedioPuntuacion}</div>
+                    <div class="text-amber-600 font-semibold">Puntuación promedio</div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-yellow-100 to-orange-100 p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold text-yellow-800">$${promedioPrecios}</div>
+                    <div class="text-yellow-600 font-semibold">Precio promedio</div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-red-100 to-orange-100 p-6 rounded-xl text-center">
+                    <div class="text-3xl font-bold text-red-800">${porcentajeVolveria}%</div>
+                    <div class="text-red-600 font-semibold">Volvería a comprar</div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-orange-100 to-red-100 p-6 rounded-xl text-center">
+                    <div class="text-2xl font-bold text-orange-800">${tipoMasComun}</div>
+                    <div class="text-orange-600 font-semibold">Tipo más probado</div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-amber-100 to-orange-100 p-6 rounded-xl text-center">
+                    <div class="text-2xl font-bold text-amber-800">${momentoMasComun}</div>
+                    <div class="text-amber-600 font-semibold">Momento favorito</div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-yellow-100 to-amber-100 p-6 rounded-xl text-center">
+                    <div class="text-2xl font-bold text-yellow-800">${alfajores.filter(a => a.puntuacion >= 9).length}</div>
+                    <div class="text-yellow-600 font-semibold">Alfajores 9+ puntos</div>
+                </div>
+                
+                <div class="bg-gradient-to-br from-red-100 to-yellow-100 p-6 rounded-xl text-center">
+                    <div class="text-2xl font-bold text-red-800">${Math.max(...alfajores.map(a => a.precio)).toFixed(2)}</div>
+                    <div class="text-red-600 font-semibold">Precio más alto ($)</div>
+                </div>
+            `;
+        }
+
+        // Actualizar mejores alfajores
+        function actualizarMejores() {
+            const bestContent = document.getElementById('best-content');
+            
+            if (alfajores.length === 0) {
+                bestContent.innerHTML = '<div class="text-center py-12"><p class="text-gray-500 text-xl">No hay alfajores registrados aún</p></div>';
+                return;
+            }
+
+            const mejores = [...alfajores]
+                .sort((a, b) => b.puntuacion - a.puntuacion)
+                .slice(0, 5);
+
+            bestContent.innerHTML = `
+                <div class="space-y-6">
+                    ${mejores.map((alfajor, index) => `
+                        <div class="flex items-center space-x-6 p-6 bg-gradient-to-r from-amber-50 to-orange-50 rounded-xl border-l-4 border-amber-500">
+                            <div class="text-4xl font-bold text-amber-600">#${index + 1}</div>
+                            ${alfajor.foto ? `<img src="${alfajor.foto}" alt="${alfajor.nombre}" class="w-20 h-20 object-cover rounded-lg">` : `
+                                <div class="w-20 h-20 bg-gradient-to-br from-orange-200 to-amber-200 rounded-lg flex items-center justify-center">
+                                    <span class="text-2xl">🧡</span>
+                                </div>
+                            `}
+                            <div class="flex-1">
+                                <h3 class="text-2xl font-bold text-orange-800">${alfajor.nombre}</h3>
+                                <p class="text-orange-600">${alfajor.tipo} • ${alfajor.relleno}</p>
+                                <p class="text-sm text-gray-600 mt-1">${alfajor.sabor}</p>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-3xl font-bold text-amber-600">${alfajor.puntuacion}</div>
+                                <div class="text-amber-500">⭐⭐⭐⭐⭐</div>
+                                <div class="text-sm text-gray-600 mt-1">$${alfajor.precio}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        }
+
+        // Editar comentarios del alfajor
+        function editarComentarios(id) {
+            const alfajor = alfajores.find(a => a.id === id);
+            if (!alfajor) return;
+
+            // Crear modal de edición
+            const modalHTML = `
+                <div id="edit-modal" class="fixed inset-0 modal-overlay flex items-center justify-center z-50">
+                    <div class="glass-effect rounded-2xl p-8 max-w-2xl w-full mx-4 card-shadow">
+                        <h3 class="text-2xl font-bold text-orange-800 mb-6 text-center">✏️ Editar Alfajor: ${alfajor.nombre}</h3>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <label class="block text-orange-800 font-bold mb-3">👅 Descripción del Sabor:</label>
+                                <input type="text" id="edit-sabor" value="${alfajor.sabor}" class="elegant-input w-full p-4 rounded-xl focus:outline-none">
+                            </div>
+                            
+                            <div>
+                                <label class="block text-orange-800 font-bold mb-3">💭 Comentarios:</label>
+                                <textarea id="edit-comentarios" rows="4" class="elegant-input w-full p-4 rounded-xl focus:outline-none resize-none">${alfajor.comentarios || ''}</textarea>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-orange-800 font-bold mb-3">⭐ Puntuación (0-10):</label>
+                                <div class="flex items-center space-x-4">
+                                    <input type="range" id="edit-puntuacion" min="0" max="10" step="0.5" value="${alfajor.puntuacion}" class="flex-1 h-3 bg-gradient-to-r from-red-400 via-yellow-400 to-green-400 rounded-lg appearance-none cursor-pointer">
+                                    <span id="edit-puntuacion-display" class="text-2xl font-bold text-orange-600 w-16 text-center bg-orange-100 rounded-lg py-2">${alfajor.puntuacion}</span>
+                                </div>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-orange-800 font-bold mb-3">🔄 ¿Volvería a comprar?</label>
+                                <div class="flex space-x-8">
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="edit-volveria" value="Sí" ${alfajor.volveria === 'Sí' ? 'checked' : ''} class="mr-3 w-5 h-5">
+                                        <span class="text-green-600 font-bold text-lg">✅ ¡Por supuesto!</span>
+                                    </label>
+                                    <label class="flex items-center cursor-pointer">
+                                        <input type="radio" name="edit-volveria" value="No" ${alfajor.volveria === 'No' ? 'checked' : ''} class="mr-3 w-5 h-5">
+                                        <span class="text-red-600 font-bold text-lg">❌ No lo haría</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="flex space-x-4 mt-8">
+                            <button onclick="guardarEdicion(${id})" class="flex-1 btn-elegant text-white py-3 px-6 rounded-xl font-bold">
+                                ✅ Guardar Cambios
+                            </button>
+                            <button onclick="cerrarModal()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-xl font-bold transition-all">
+                                ❌ Cancelar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            // Configurar slider de puntuación en el modal
+            const editPuntuacionSlider = document.getElementById('edit-puntuacion');
+            const editPuntuacionDisplay = document.getElementById('edit-puntuacion-display');
+            
+            editPuntuacionSlider.addEventListener('input', function() {
+                editPuntuacionDisplay.textContent = parseFloat(this.value).toFixed(1);
+            });
+
+            // Cerrar modal al hacer clic fuera
+            document.getElementById('edit-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    cerrarModal();
+                }
+            });
+        }
+
+        // Guardar edición
+        function guardarEdicion(id) {
+            const alfajorIndex = alfajores.findIndex(a => a.id === id);
+            if (alfajorIndex === -1) return;
+
+            const nuevoSabor = document.getElementById('edit-sabor').value;
+            const nuevosComentarios = document.getElementById('edit-comentarios').value;
+            const nuevaPuntuacion = parseFloat(document.getElementById('edit-puntuacion').value);
+            const nuevaVolveria = document.querySelector('input[name="edit-volveria"]:checked')?.value;
+
+            if (!nuevoSabor || !nuevaVolveria) {
+                mostrarMensaje('Por favor completa todos los campos obligatorios', 'warning');
+                return;
+            }
+
+            // Actualizar el alfajor
+            alfajores[alfajorIndex] = {
+                ...alfajores[alfajorIndex],
+                sabor: nuevoSabor,
+                comentarios: nuevosComentarios,
+                puntuacion: nuevaPuntuacion,
+                volveria: nuevaVolveria
+            };
+
+            localStorage.setItem('alfajores', JSON.stringify(alfajores));
+            
+            // Actualizar vistas
+            actualizarGaleria();
+            actualizarEstadisticas();
+            actualizarMejores();
+            
+            cerrarModal();
+            mostrarMensaje('¡Alfajor actualizado exitosamente! ✨', 'success');
+        }
+
+        // Cerrar modal
+        function cerrarModal() {
+            const modal = document.getElementById('edit-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Eliminar alfajor
+        function eliminarAlfajor(id) {
+            const alfajor = alfajores.find(a => a.id === id);
+            if (!alfajor) return;
+
+            // Crear modal de confirmación elegante
+            const modalHTML = `
+                <div id="delete-modal" class="fixed inset-0 modal-overlay flex items-center justify-center z-50">
+                    <div class="glass-effect rounded-2xl p-8 max-w-md w-full mx-4 card-shadow">
+                        <div class="text-center">
+                            <div class="text-6xl mb-4">🗑️</div>
+                            <h3 class="text-2xl font-bold text-red-800 mb-4">¿Eliminar Alfajor?</h3>
+                            <p class="text-gray-700 mb-2">Estás a punto de eliminar:</p>
+                            <p class="text-xl font-bold text-orange-800 mb-6">${alfajor.nombre}</p>
+                            <p class="text-sm text-gray-600 mb-8">Esta acción no se puede deshacer.</p>
+                            
+                            <div class="flex space-x-4">
+                                <button onclick="confirmarEliminacion(${id})" class="flex-1 bg-red-500 hover:bg-red-600 text-white py-3 px-6 rounded-xl font-bold transition-all">
+                                    🗑️ Sí, Eliminar
+                                </button>
+                                <button onclick="cerrarModalDelete()" class="flex-1 bg-gray-500 hover:bg-gray-600 text-white py-3 px-6 rounded-xl font-bold transition-all">
+                                    ❌ Cancelar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            // Cerrar modal al hacer clic fuera
+            document.getElementById('delete-modal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    cerrarModalDelete();
+                }
+            });
+        }
+
+        // Confirmar eliminación
+        function confirmarEliminacion(id) {
+            alfajores = alfajores.filter(a => a.id !== id);
+            localStorage.setItem('alfajores', JSON.stringify(alfajores));
+            actualizarGaleria();
+            actualizarEstadisticas();
+            actualizarMejores();
+            cerrarModalDelete();
+            mostrarMensaje('Alfajor eliminado correctamente', 'info');
+        }
+
+        // Cerrar modal de eliminación
+        function cerrarModalDelete() {
+            const modal = document.getElementById('delete-modal');
+            if (modal) {
+                modal.remove();
+            }
+        }
+
+        // Exportar a Excel
+        function exportToExcel() {
+            if (alfajores.length === 0) {
+                mostrarMensaje('No hay alfajores para exportar', 'warning');
+                return;
+            }
+
+            const ws_data = [
+                ['Fecha', 'Momento', 'Nombre', 'Tipo', 'Relleno', 'Tamaño', 'Precio', 'Sabor', 'Comentarios', 'Puntuación', '¿Volvería a comprar?']
+            ];
+
+            alfajores.forEach(alfajor => {
+                ws_data.push([
+                    alfajor.fecha,
+                    alfajor.momento,
+                    alfajor.nombre,
+                    alfajor.tipo,
+                    alfajor.relleno,
+                    alfajor.tamaño,
+                    alfajor.precio,
+                    alfajor.sabor,
+                    alfajor.comentarios,
+                    alfajor.puntuacion,
+                    alfajor.volveria
+                ]);
+            });
+
+            const ws = XLSX.utils.aoa_to_sheet(ws_data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Alfajores");
+            XLSX.writeFile(wb, `alfajores_${new Date().getFullYear()}.xlsx`);
+            
+            mostrarMensaje('Excel exportado correctamente', 'success');
+        }
+
+        // Exportar a PDF
+        function exportToPDF() {
+            if (alfajores.length === 0) {
+                mostrarMensaje('No hay alfajores para exportar', 'warning');
+                return;
+            }
+
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(20);
+            doc.text('Mi Registro de Alfajores 2024', 20, 20);
+            
+            let y = 40;
+            doc.setFontSize(12);
+            
+            alfajores.forEach((alfajor, index) => {
+                if (y > 250) {
+                    doc.addPage();
+                    y = 20;
+                }
+                
+                doc.setFontSize(14);
+                doc.text(`${index + 1}. ${alfajor.nombre}`, 20, y);
+                y += 10;
+                
+                doc.setFontSize(10);
+                doc.text(`Fecha: ${alfajor.fecha} | Momento: ${alfajor.momento} | Puntuación: ${alfajor.puntuacion}/10`, 20, y);
+                y += 7;
+                doc.text(`Tipo: ${alfajor.tipo} | Relleno: ${alfajor.relleno} | Precio: $${alfajor.precio}`, 20, y);
+                y += 7;
+                doc.text(`Sabor: ${alfajor.sabor}`, 20, y);
+                y += 7;
+                if (alfajor.comentarios) {
+                    doc.text(`Comentarios: ${alfajor.comentarios}`, 20, y);
+                    y += 7;
+                }
+                doc.text(`¿Volvería a comprar?: ${alfajor.volveria}`, 20, y);
+                y += 15;
+            });
+            
+            doc.save(`alfajores_${new Date().getFullYear()}.pdf`);
+            mostrarMensaje('PDF exportado correctamente', 'success');
+        }
+
+        // Mostrar mensajes
+        function mostrarMensaje(mensaje, tipo) {
+            const colores = {
+                success: 'bg-green-500',
+                error: 'bg-red-500',
+                warning: 'bg-yellow-500',
+                info: 'bg-blue-500'
+            };
+
+            const div = document.createElement('div');
+            div.className = `fixed top-4 right-4 ${colores[tipo]} text-white px-6 py-3 rounded-lg shadow-lg z-50 transform translate-x-full transition-transform duration-300`;
+            div.textContent = mensaje;
+            
+            document.body.appendChild(div);
+            
+            setTimeout(() => {
+                div.classList.remove('translate-x-full');
+            }, 100);
+            
+            setTimeout(() => {
+                div.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(div);
+                }, 300);
+            }, 3000);
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'96ba4324f783eab8',t:'MTc1NDYwNjI4NS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
